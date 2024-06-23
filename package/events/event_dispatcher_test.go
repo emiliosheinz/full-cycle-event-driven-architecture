@@ -80,7 +80,13 @@ func (suite *EventDispatcherTestSuite) TestEventDispatcher_Clear() {
 	/** Clear first event and check for success */
 	suite.eventDispatcher.Clear()
 	suite.Equal(0, len(suite.eventDispatcher.handlers))
+}
 
+func (suite *EventDispatcherTestSuite) TestEventDispatcher_Has() {
+	err := suite.eventDispatcher.Register(suite.event.GetName(), &suite.handler)
+	suite.Nil(err)
+	suite.True(suite.eventDispatcher.Has(suite.event.GetName(), &suite.handler))
+	suite.False(suite.eventDispatcher.Has(suite.event2.GetName(), &suite.handler))
 }
 
 func TestSuite(t *testing.T) {
