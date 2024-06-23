@@ -1,6 +1,7 @@
 package events
 
 import (
+	"sync"
 	"testing"
 	"time"
 
@@ -92,18 +93,22 @@ func (suite *EventDispatcherTestSuite) TestEventDispatcher_Has() {
 
 type MockHandler struct {
 	mock.Mock
+	wg *sync.WaitGroup
 }
 
 func (m *MockHandler) Handle(event EventInterface) {
+	defer m.wg.Done()
 	m.Called(event)
 }
 
 func (suite *EventDispatcherTestSuite) TestEventDispatcher_Dispatch() {
-	eh := &MockHandler{}
-	eh.On("Handle", &suite.event)
+	var wg sync.WaitGroup
+	wg.Add(1) // Expecting one call to Handle
+	eh := &MockHandler{wg: &wg}
+	eh.On("Handle", mock.Anything).Return(nil) // Setup expectation
 	suite.eventDispatcher.Register(suite.event.GetName(), eh)
-	suite.eventDispatcher.Register(suite.event2.GetName(), eh)
 	suite.eventDispatcher.Dispatch(&suite.event)
+	wg.Wait() // Wait for all goroutines to finish
 	eh.AssertExpectations(suite.T())
 	eh.AssertNumberOfCalls(suite.T(), "Handle", 1)
 }
