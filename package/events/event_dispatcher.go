@@ -2,7 +2,7 @@ package events
 
 import "errors"
 
-var ErrorHandlerAlreadyRegistered = errors.New("Handler already registered")
+var ErrorHandlerAlreadyRegistered = errors.New("handler already registered")
 
 type EventDispatcher struct {
 	handlers map[string][]EventHandlerInterface
