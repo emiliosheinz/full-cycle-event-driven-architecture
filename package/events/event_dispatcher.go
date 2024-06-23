@@ -40,3 +40,11 @@ func (ed *EventDispatcher) Has(eventName string, handler EventHandlerInterface) 
 	}
 	return false
 }
+
+func (ed *EventDispatcher) Dispatch(event EventInterface) {
+	if handlers, ok := ed.handlers[event.GetName()]; ok {
+		for _, handler := range handlers {
+			handler.Handle(event)
+		}	
+	}
+}
