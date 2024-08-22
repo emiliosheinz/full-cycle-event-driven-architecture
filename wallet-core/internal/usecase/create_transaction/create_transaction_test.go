@@ -4,6 +4,8 @@ import (
 	"testing"
 
 	"github.com/emiliosheinz/fc-ms-wallet-core/internal/entity"
+	event "github.com/emiliosheinz/fc-ms-wallet-core/internal/events"
+	"github.com/emiliosheinz/fc-ms-wallet-core/package/events"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
@@ -52,7 +54,9 @@ func TestCreateTransactionUseCase_Execute(t *testing.T) {
 		AccountIDTo:   accountTo.ID,
 		Amount:        100,
 	}
-	uc := NewCreateTransactionUseCase(mockTransaction, mockAccount)
+	dispatcher := events.NewEventDispatcher()
+	event := event.NewTransactionCreated()
+	uc := NewCreateTransactionUseCase(mockTransaction, mockAccount, dispatcher, event)
 	output, err := uc.Execute(inputDto)
 
 	assert.Nil(t, err)
