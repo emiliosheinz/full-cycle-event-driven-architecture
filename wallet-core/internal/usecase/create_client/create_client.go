@@ -5,7 +5,7 @@ import (
 	"github.com/emiliosheinz/fc-ms-wallet-core/internal/gateway"
 )
 
-type CreateClientDTO struct {
+type CreateClientInputDTO struct {
 	Name  string
 	Email string
 }
@@ -26,7 +26,7 @@ func NewCreateClientUseCase(clientGateway gateway.ClientGateway) *CreateClientUs
 	return &CreateClientUseCase{ClientGatewat: clientGateway}
 }
 
-func (uc *CreateClientUseCase) Execute(dto *CreateClientDTO) (*CreateClientOutputDTO, error) {
+func (uc *CreateClientUseCase) Execute(dto CreateClientInputDTO) (*CreateClientOutputDTO, error) {
 	client, err := entity.NewClient(dto.Name, dto.Email)
 	if err != nil {
 		return nil, err
