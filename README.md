@@ -30,6 +30,12 @@ This separation of concerns allows us also to have the data stored separately, w
 
 Greg Young, who is one of the main proponents of CQRS, has a great talk on this topic, which you can watch [here](https://www.youtube.com/watch?v=JHGkaShoyNs).
 
+## Unit of Work (UoW)
+
+Unit of Work is a design pattern where the system is divided into units of work, each of which is responsible for handling a specific set of operations. These units of work can then be combined to form a larger unit of work, which is responsible for coordinating the execution of the individual units of work. This pattern helps to ensure that the system remains consistent and that changes are applied atomically, meaning that they are either all applied or none are applied.
+
+You can find an example of implementation of the Unit of Work pattern in the [`./wallet-core/package/uow/uow.go`](./wallet-core/package/uow/uow.go) file. 
+
 ## Running Locally
 
 1. Clone this repo
