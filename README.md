@@ -29,3 +29,10 @@ This separation of concerns allows us also to have the data stored separately, w
 ![Separation of database example](./docs/images/separation.png)
 
 Greg Young, who is one of the main proponents of CQRS, has a great talk on this topic, which you can watch [here](https://www.youtube.com/watch?v=JHGkaShoyNs).
+
+## Running Locally
+
+1. Clone this repo
+1. Run `docker compose up -d` on the root folder
+
+
