@@ -50,6 +50,14 @@ func (uc *CreateTransactionUseCase) Execute(input CreateTransactionInputDTO) (*C
 	if err != nil {
 		return nil, err
 	}
+	err = uc.AccountGateway.UpdateBalance(accountFrom)
+	if err != nil {
+		return nil, err
+	}
+	err = uc.AccountGateway.UpdateBalance(accountTo)
+	if err != nil {
+		return nil, err
+	}
 	err = uc.TransactionGateway.Create(transaction)
 	if err != nil {
 		return nil, err
