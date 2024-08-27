@@ -41,4 +41,88 @@ You can find an example of implementation of the Unit of Work pattern in the [`.
 1. Clone this repo
 1. Run `docker compose up -d` on the root folder
 
+## Testing the application
+
+### Create clients
+
+The request below creates a client and returns the client ID. You will need this ID to create an account.
+
+```bash
+curl --location 'http://localhost:3000/clients' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "name": "John Doe",
+    "email": "john@doe.com"
+}'
+```
+
+### Create accounts
+
+The request below creates an account and returns the account ID. You will need this ID to create a transaction.
+
+```bash
+curl --location 'http://localhost:3000/accounts' \
+--header 'Content-Type: application/json' \
+--data '{
+    "client_id": "Client ID returned from the previous request"
+}'
+```
+
+### Create a transaction between two accounts
+
+The request below creates a transaction between two accounts. The amount is the value that will be transferred from the account with the ID `account_id_from` to the account with the ID `account_id_to`.
+
+```bash
+curl --location 'http://localhost:3000/transactions' \
+--header 'Content-Type: application/json' \
+--data '{
+    "account_id_from": "Account id from",
+    "account_id_to": "Account id to",
+    "amount": 100
+}'
+```
+
+## Useful SQL queries
+
+Below you will find useful SQL queries to check the side effects of the requests you made. You can run these by connecting to the database container and running the `mysql -u root -p wallet` command and entering the `root` password. 
+
+### List clients
+
+```sql
+SELECT * FROM clients;
+```
+
+### List accounts
+
+```sql
+SELECT * FROM accounts;
+```
+
+### List transactions
+
+```sql
+SELECT * FROM transactions;
+```
+
+### Add balance to an account
+
+```sql
+UPDATE accounts SET balance = 1000 WHERE id = 'Account ID';
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

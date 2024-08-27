@@ -20,6 +20,8 @@ services:
       MYSQL_PASSWORD: root
     ports:
       - 3306:3306
+    volumes:
+      - ./wallet-core/db:/var/lib/mysql
     healthcheck:
       test: ["CMD-SHELL", "mysqladmin ping -h localhost"]
       interval: 10s
