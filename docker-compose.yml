@@ -9,7 +9,10 @@ services:
       wallet-mysql:
         condition: service_healthy
     ports:
-      - 3000:3000 
+      - 3000:3000
+    volumes:
+      - ./wallet-core:/go/src/app
+ 
   wallet-mysql:
     image: mysql:8.0
     container_name: wallet-mysql
@@ -48,41 +51,41 @@ services:
   #     MYSQL_PASSWORD: root
   #   ports:
   #     - 3307:3306
-  # zookeeper:
-  #   image: "confluentinc/cp-zookeeper:6.1.0"
-  #   container_name: zookeeper
-  #   platform: linux/amd64
-  #   ports:
-  #     - 2181:2181
-  #   environment:
-  #     TZ: Sao_Paulo/Brazil
-  #     ZOOKEEPER_CLIENT_PORT: 2181
-  #     ZOOKEEPER_TICK_TIME: 2000
-  #
-  # kafka:
-  #   image: "confluentinc/cp-enterprise-kafka:6.1.0"
-  #   container_name: kafka
-  #   depends_on:
-  #     - zookeeper
-  #   ports:
-  #   # Exposes 9092 for external connections to the broker
-  #   # Use kafka:29092 for connections internal on the docker network
-  #   # See https://rmoff.net/2018/08/02/kafka-listeners-explained/ for details
-  #     - '9092:9092'
-  #   environment:
-  #     TZ: Sao_Paulo/Brazil
-  #     KAFKA_BROKER_ID: 1
-  #     KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-  #     KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-  #     KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
-  #     KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
-  #     KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
-  #     KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-  #     KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
-  #     KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
-  #     KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 100
-  #     CONFLUENT_METRICS_ENABLE: 'false'
-  #
+  zookeeper:
+    image: "confluentinc/cp-zookeeper"
+    container_name: zookeeper
+    platform: linux/arm64
+    ports:
+      - 2181:2181
+    environment:
+      TZ: Sao_Paulo/Brazil
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  kafka:
+    image: "confluentinc/cp-enterprise-kafka"
+    container_name: kafka
+    depends_on:
+      - zookeeper
+    ports:
+    # Exposes 9092 for external connections to the broker
+    # Use kafka:29092 for connections internal on the docker network
+    # See https://rmoff.net/2018/08/02/kafka-listeners-explained/ for details
+      - '9092:9092'
+    environment:
+      TZ: Sao_Paulo/Brazil
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 100
+      CONFLUENT_METRICS_ENABLE: 'false'
+
   # control-center:
   #   image: confluentinc/cp-enterprise-control-center:7.3.0
   #   hostname: control-center
