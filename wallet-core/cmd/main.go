@@ -5,14 +5,17 @@ import (
 	"database/sql"
 	"fmt"
 
+	ckafka "github.com/confluentinc/confluent-kafka-go/kafka"
 	"github.com/emiliosheinz/fc-ms-wallet-core/internal/database"
-	event "github.com/emiliosheinz/fc-ms-wallet-core/internal/events"
+	event "github.com/emiliosheinz/fc-ms-wallet-core/internal/event"
+	"github.com/emiliosheinz/fc-ms-wallet-core/internal/event/handler"
 	createaccount "github.com/emiliosheinz/fc-ms-wallet-core/internal/usecase/create_account"
 	createclient "github.com/emiliosheinz/fc-ms-wallet-core/internal/usecase/create_client"
 	createtransaction "github.com/emiliosheinz/fc-ms-wallet-core/internal/usecase/create_transaction"
 	"github.com/emiliosheinz/fc-ms-wallet-core/internal/web"
 	"github.com/emiliosheinz/fc-ms-wallet-core/internal/web/webserver"
 	"github.com/emiliosheinz/fc-ms-wallet-core/package/events"
+	"github.com/emiliosheinz/fc-ms-wallet-core/package/kafka"
 	"github.com/emiliosheinz/fc-ms-wallet-core/package/uow"
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -22,7 +25,9 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
 	defer db.Close()
+
 	_, err = db.Exec("CREATE TABLE IF NOT EXISTS clients (id varchar(255), name varchar(255), email varchar(255), created_at date)")
 	if err != nil {
 		panic(err)
@@ -36,7 +41,14 @@ func main() {
 		panic(err)
 	}
 
+	configMap := ckafka.ConfigMap{
+		"bootstrap.servers": "kafka:9094",
+		"group.id":          "wallet",
+	}
+	kafkaProducer := kafka.NewKafkaProducer(&configMap)
+
 	eventDispatcher := events.NewEventDispatcher()
+	eventDispatcher.Register("TransactionCreated", handler.NewTransactionCreatedKafkaHandler(kafkaProducer))
 	transactionCreatedEvent := event.NewTransactionCreated()
 
 	clientDb := database.NewClientDB(db)
