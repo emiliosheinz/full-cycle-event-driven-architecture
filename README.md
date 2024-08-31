@@ -95,7 +95,7 @@ SELECT * FROM clients;
 ### List accounts
 
 ```sql
-SELECT * FROM accounts;
+mysql -u root -p wallet
 ```
 
 ### List transactions

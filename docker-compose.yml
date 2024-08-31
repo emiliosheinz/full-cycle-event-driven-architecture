@@ -4,7 +4,7 @@ services:
   wallet-app:
     build: ./wallet-core
     container_name: wallet
-    platform: linux/arm64
+    platform: linux/amd64
     depends_on:
       wallet-mysql:
         condition: service_healthy
@@ -65,6 +65,7 @@ services:
   kafka:
     image: "confluentinc/cp-enterprise-kafka"
     container_name: kafka
+    platform: linux/amd64
     depends_on:
       - zookeeper
     ports:
