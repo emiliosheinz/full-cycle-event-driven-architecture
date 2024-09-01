@@ -2,6 +2,6 @@ export class Account {
   constructor(
     public id: string,
     public balance: number,
-    public updatedAt = Date.now(),
+    public updatedAt = new Date(),
   ) {}
 }

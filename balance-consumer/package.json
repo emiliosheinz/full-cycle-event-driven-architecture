@@ -26,7 +26,8 @@
   "homepage": "https://github.com/emiliosheinz/full-cycle-event-driven-architecture#readme",
   "dependencies": {
     "dotenv": "^16.4.5",
-    "express": "^4.19.2"
+    "express": "^4.19.2",
+    "mysql2": "^3.11.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.1",
