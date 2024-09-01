@@ -1,12 +1,14 @@
-import 'dotenv/config'
+import 'dotenv/config';
 
-import express from 'express'
+import express from 'express';
 
 const app = express();
 const port = process.env.PORT;
 
-app.get('/', (req, res) => {
-  res.send('Express + TypeScript Server');
+app.get('/balances/:accountId', (req, res) => {
+  res.send(
+    `You requested balances for account with ID: ${req.params.accountId}`,
+  );
 });
 
 app.listen(port, () => {

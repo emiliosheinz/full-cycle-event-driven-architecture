@@ -32,25 +32,36 @@ services:
       start_period: 30s
       timeout: 10s
 
-  # balances-app:
-  #   build: .
-  #   container_name: balances
-  #   platform: linux/amd64
-  #   volumes:
-  #     - ./balances:/app
-  #   ports:
-  #     - 3003:3003
-  # 
-  # balances-mysql:
-  #   image: mysql:5.7
-  #   container_name: balances-mysql
-  #   platform: linux/amd64
-  #   environment:
-  #     MYSQL_ROOT_PASSWORD: root
-  #     MYSQL_DATABASE: balances
-  #     MYSQL_PASSWORD: root
-  #   ports:
-  #     - 3307:3306
+  balances-app:
+    build: ./balance-consumer
+    container_name: balances
+    platform: linux/arm64
+    depends_on:
+      balances-mysql:
+        condition: service_healthy
+    volumes:
+      - ./balance-consumer:/app
+    ports:
+      - 3003:3003
+
+  balances-mysql:
+    image: mysql:8.0
+    container_name: balances-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: balances
+      MYSQL_PASSWORD: root
+    ports:
+      - 3307:3306
+    volumes:
+      - ./balance-consumer/db:/var/lib/mysql 
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
+
   zookeeper:
     image: "confluentinc/cp-zookeeper"
     container_name: zookeeper
