@@ -1,0 +1,42 @@
+{
+  "name": "balance-consumer",
+  "version": "1.0.0",
+  "description": "Consumes kafka events and stores them in a relational database",
+  "main": "index.js",
+  "scripts": {
+    "dev": "npx nodemon",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/emiliosheinz/full-cycle-event-driven-architecture.git"
+  },
+  "keywords": [
+    "kafka",
+    "event",
+    "driven",
+    "architecture"
+  ],
+  "author": "emiliosheinz",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/emiliosheinz/full-cycle-event-driven-architecture/issues"
+  },
+  "homepage": "https://github.com/emiliosheinz/full-cycle-event-driven-architecture#readme",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.9.1",
+    "@types/express": "^4.17.21",
+    "@types/node": "^22.5.2",
+    "eslint": "^9.9.1",
+    "eslint-config-prettier": "^9.1.0",
+    "globals": "^15.9.0",
+    "nodemon": "^3.1.4",
+    "prettier": "^3.3.3",
+    "typescript": "^5.5.4",
+    "typescript-eslint": "^8.3.0"
+  }
+}
