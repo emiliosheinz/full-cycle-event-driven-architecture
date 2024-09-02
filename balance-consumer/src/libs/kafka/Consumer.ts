@@ -10,7 +10,11 @@ export class KafkaConsumer {
     this.client = new kafka.KafkaClient({ kafkaHost: 'kafka:29092' });
   }
 
-  public consume(topic: string, onMessage: (value: MessageValue) => void) {
+  public consume(
+    topic: string,
+    onMessage: (value: MessageValue) => void,
+    onError: (error: unknown) => void,
+  ) {
     const consumer = new kafka.Consumer(this.client, [{ topic: topic }], {
       autoCommit: false,
     });
@@ -23,5 +27,6 @@ export class KafkaConsumer {
       }
       onMessage({ name, payload });
     });
+    consumer.on('error', onError);
   }
 }
