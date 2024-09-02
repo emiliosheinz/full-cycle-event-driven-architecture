@@ -70,21 +70,21 @@ curl --location 'http://localhost:3000/accounts' \
 
 ### Create a transaction between two accounts
 
-The request below creates a transaction between two accounts. The amount is the value that will be transferred from the account with the ID `account_id_from` to the account with the ID `account_id_to`.
+The request below creates a transaction between two accounts that have already been created in the Database. The amount is the value that will be transferred from the account with the ID `account_id_from` to the account with the ID `account_id_to`.
 
 ```bash
 curl --location 'http://localhost:3000/transactions' \
 --header 'Content-Type: application/json' \
 --data '{
-    "account_id_from": "Account id from",
-    "account_id_to": "Account id to",
+    "account_id_from": "1",
+    "account_id_to": "2",
     "amount": 100
 }'
 ```
 
 ## Useful SQL queries
 
-Below you will find useful SQL queries to check the side effects of the requests you made. You can run these by connecting to the database container and running the `mysql -u root -p wallet` command and entering the `root` password. 
+Below you will find useful SQL queries to check the side effects of the requests you made. You can run these by connecting to the database container and running the `mysql -u root -p wallet|balances` command and entering the `root` password. 
 
 ### List clients
 

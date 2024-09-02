@@ -28,15 +28,31 @@ func main() {
 
 	defer db.Close()
 
-	_, err = db.Exec("CREATE TABLE IF NOT EXISTS clients (id varchar(255), name varchar(255), email varchar(255), created_at date)")
+	_, err = db.Exec("CREATE TABLE IF NOT EXISTS clients (id varchar(255), name varchar(255), email varchar(255), created_at date, PRIMARY KEY (id))")
 	if err != nil {
 		panic(err)
 	}
-	_, err = db.Exec("CREATE TABLE IF NOT EXISTS accounts (id varchar(255), client_id varchar(255), balance integer, created_at date)")
+	_, err = db.Exec("CREATE TABLE IF NOT EXISTS accounts (id varchar(255), client_id varchar(255), balance integer, created_at date, PRIMARY KEY (id))")
 	if err != nil {
 		panic(err)
 	}
 	_, err = db.Exec("CREATE TABLE IF NOT EXISTS transactions (id varchar(255), account_id_from varchar(255), account_id_to varchar(255), amount integer, created_at date)")
+	if err != nil {
+		panic(err)
+	}
+	_, err = db.Exec("INSERT IGNORE INTO clients (id, name, email, created_at) VALUES ('1', 'Emilio Heinzmann', 'emiliosheinz@gmail.com', '2021-09-01')")
+	if err != nil {
+		panic(err)
+	}
+	_, err = db.Exec("INSERT IGNORE INTO accounts (id, client_id, balance, created_at) VALUES ('1', '1', 1000, '2021-09-01')")
+	if err != nil {
+		panic(err)
+	}
+	_, err = db.Exec("INSERT IGNORE INTO clients (id, name, email, created_at) VALUES ('2', 'John Doe', 'john@doe.com', '2021-09-01')")
+	if err != nil {
+		panic(err)
+	}
+	_, err = db.Exec("INSERT IGNORE INTO accounts (id, client_id, balance, created_at) VALUES ('2', '2', 1000, '2021-09-01')")
 	if err != nil {
 		panic(err)
 	}

@@ -49,39 +49,28 @@ app.listen(port, () => {
 
 /** Kafka consumer */
 const consumer = new KafkaConsumer();
-(function consumAppTopics() {
-  consumer.consume(
-    Topic.Balances,
-    ({ name, payload }) => {
-      if (name === Message.BalanceUpdated) {
-        const {
-          account_id_from,
-          account_id_to,
-          ballance_account_from,
-          ballance_account_to,
-        } = payload as BalanceUpdatedPayload;
-        const accountRepository = new AccountRepository(database);
-        const updateAccountBalanceUseCase = new UpdateAccountBalanceUseCase(
-          accountRepository,
-        );
-        updateAccountBalanceUseCase.execute({
-          id: account_id_from,
-          balance: ballance_account_from,
-        });
-        updateAccountBalanceUseCase.execute({
-          id: account_id_to,
-          balance: ballance_account_to,
-        });
-      }
-    },
-    /** Retry when topic does not exist yet */
-    error => {
-      const errorName = error?.toString().split(':').shift();
-      if (errorName === 'TopicsNotExistError') {
-        console.log(error?.toString());
-        console.log('Trying again');
-        setTimeout(() => consumAppTopics(), 10_000);
-      }
-    },
-  );
+(async () => {
+  await consumer.toBeReady(Topic.Balances);
+  consumer.consume(Topic.Balances, ({ name, payload }) => {
+    if (name === Message.BalanceUpdated) {
+      const {
+        account_id_from,
+        account_id_to,
+        ballance_account_from,
+        ballance_account_to,
+      } = payload as BalanceUpdatedPayload;
+      const accountRepository = new AccountRepository(database);
+      const updateAccountBalanceUseCase = new UpdateAccountBalanceUseCase(
+        accountRepository,
+      );
+      updateAccountBalanceUseCase.execute({
+        id: account_id_from,
+        balance: ballance_account_from,
+      });
+      updateAccountBalanceUseCase.execute({
+        id: account_id_to,
+        balance: ballance_account_to,
+      });
+    }
+  });
 })();
