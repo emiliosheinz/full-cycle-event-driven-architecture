@@ -22,7 +22,7 @@ export class KafkaConsumer {
             console.log(`Waiting for ${topic} topic to be ready...`);
           }
         });
-      }, 10_000);
+      }, 3_000);
     });
   }
 
