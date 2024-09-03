@@ -43,9 +43,17 @@ You can find an example of implementation of the Unit of Work pattern in the [`.
 
 ## Testing the application
 
-### Create clients
+Below are instructions on how to interact with the microservices contained in this repository.
 
-The request below creates a client and returns the client ID. You will need this ID to create an account.
+By default, two accounts are created in the Wallet Core MySQL database with IDs `1` and `2`, each with a balance of `1000`. You can either choose to create your own accounts or test the transactions using the ones already available in the database.
+
+### Wallet Core
+
+The requests listed below are all made to the `wallet-core` microservice. 
+
+#### Create clients
+
+Creates a client and returns the client ID. You will need this ID to create an account.
 
 ```bash
 curl --location 'http://localhost:3000/clients' \
@@ -56,9 +64,9 @@ curl --location 'http://localhost:3000/clients' \
 }'
 ```
 
-### Create accounts
+#### Create accounts
 
-The request below creates an account and returns the account ID. You will need this ID to create a transaction.
+Creates an account and returns the account ID. You will need this ID to create a transaction.
 
 ```bash
 curl --location 'http://localhost:3000/accounts' \
@@ -68,9 +76,9 @@ curl --location 'http://localhost:3000/accounts' \
 }'
 ```
 
-### Create a transaction between two accounts
+#### Create a transaction between two accounts
 
-The request below creates a transaction between two accounts that have already been created in the Database. The amount is the value that will be transferred from the account with the ID `account_id_from` to the account with the ID `account_id_to`.
+Creates a transaction between two accounts that have already been created in the Database. The amount is the value that will be transferred from the account with the ID `account_id_from` to the account with the ID `account_id_to`.
 
 ```bash
 curl --location 'http://localhost:3000/transactions' \
@@ -82,47 +90,54 @@ curl --location 'http://localhost:3000/transactions' \
 }'
 ```
 
+### Balances Consumer 
+
+The requests listed below are all made to the `balance-consumer` microservice. 
+
+#### Get account balance
+
+Gets the updated balance for a specific account. It is important to mention that this value is update on the Balances Consumer database through Kafka messages every time a transaction happens on Wallet Core. 
+
+```bash
+curl --location 'http://localhost:3003/balances/:accountId' \
+--header 'Content-Type: application/json' 
+```
+
 ## Useful SQL queries
 
 Below you will find useful SQL queries to check the side effects of the requests you made. You can run these by connecting to the database container and running the `mysql -u root -p wallet|balances` command and entering the `root` password. 
 
-### List clients
+### Wallet Core
+
+#### List clients
 
 ```sql
 SELECT * FROM clients;
 ```
 
-### List accounts
+#### List accounts
 
 ```sql
-mysql -u root -p wallet
+SELECT * FROM accounts;
 ```
 
-### List transactions
+#### List transactions
 
 ```sql
 SELECT * FROM transactions;
 ```
 
-### Add balance to an account
+#### Add balance to an account
 
 ```sql
 UPDATE accounts SET balance = 1000 WHERE id = 'Account ID';
 ```
 
+### Balance Consumer
 
+#### List accounts
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+```sql
+SELECT * FROM accounts;
+```
 
