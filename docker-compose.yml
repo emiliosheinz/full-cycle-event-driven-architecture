@@ -4,7 +4,6 @@ services:
   wallet-app:
     build: ./wallet-core
     container_name: wallet
-    platform: linux/amd64
     depends_on:
       wallet-mysql:
         condition: service_healthy
@@ -16,7 +15,6 @@ services:
   wallet-mysql:
     image: mysql:8.0
     container_name: wallet-mysql
-    platform: linux/arm64
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: wallet
@@ -35,7 +33,6 @@ services:
   balances-app:
     build: ./balance-consumer
     container_name: balances
-    platform: linux/arm64
     depends_on:
       balances-mysql:
         condition: service_healthy
@@ -65,7 +62,6 @@ services:
   zookeeper:
     image: "confluentinc/cp-zookeeper"
     container_name: zookeeper
-    platform: linux/arm64
     ports:
       - 2181:2181
     environment:
@@ -76,7 +72,6 @@ services:
   kafka:
     image: "confluentinc/cp-enterprise-kafka"
     container_name: kafka
-    platform: linux/amd64
     depends_on:
       - zookeeper
     ports:
